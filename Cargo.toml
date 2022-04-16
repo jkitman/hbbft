@@ -31,7 +31,7 @@ init_with = "1.1.0"
 log = "0.4.6"
 rand = "0.6.5"
 rand_derive = "0.5.0"
-reed-solomon-erasure = "3.1.1"
+reed-solomon-erasure = "5.0.1"
 serde = { version = "1.0.89", features = ["derive"] }
 threshold_crypto = "0.3.1"
 tiny-keccak = "1.4"
@@ -61,6 +61,3 @@ overflow-checks = true
 
 [features]
 use-insecure-test-only-mock-crypto = ["threshold_crypto/use-insecure-test-only-mock-crypto"]
-# TODO: Remove this feature once https://github.com/darrenldl/reed-solomon-erasure/issues/28 is
-#       resolved.
-no-simd = ["reed-solomon-erasure/pure-rust"]
