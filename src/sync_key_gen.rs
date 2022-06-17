@@ -63,7 +63,7 @@
 //! use hbbft::sync_key_gen::{to_pub_keys, AckOutcome, PartOutcome, PubKeyMap, SyncKeyGen};
 //!
 //! // Use the OS random number generator for any randomness:
-//! let mut rng = rand::rngs::OsRng::new().expect("Could not open OS random number generator.");
+//! let mut rng = rand::rngs::OsRng;
 //!
 //! // Two out of four shares will suffice to sign or encrypt something.
 //! let (threshold, node_num) = (1, 4);
