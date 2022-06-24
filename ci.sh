@@ -23,5 +23,4 @@ cd hbbft_testing
 cargo clippy --all-targets -- --deny clippy::all
 cargo fmt -- --check
 cargo test --features=use-insecure-test-only-mock-crypto --release
-cargo audit
 cd ..

@@ -20,6 +20,9 @@ edition = "2018"
 [badges]
 travis-ci = { repository = "poanetwork/hbbft" }
 
+[workspace]
+members = ["hbbft_testing"]
+
 [dependencies]
 bincode = "1.2.0"
 byteorder = "1.3.2"
