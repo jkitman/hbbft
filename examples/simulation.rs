@@ -5,7 +5,7 @@ use std::{cmp, u64};
 use colored::*;
 use docopt::Docopt;
 use itertools::Itertools;
-use number_prefix::{NumberPrefix, Prefixed, Standalone};
+use number_prefix::NumberPrefix;
 use rand::{distributions::Standard, rngs::OsRng, seq::SliceRandom, Rng};
 use rand_derive::Rand;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
@@ -365,8 +365,8 @@ impl EpochInfo {
             network.message_count() / network.nodes.len(),
             match NumberPrefix::decimal(network.message_size() as f64 / network.nodes.len() as f64)
             {
-                Standalone(bytes) => format!("{:3.0}  ", bytes),
-                Prefixed(prefix, n) => format!("{:3.0} {}", n, prefix),
+                NumberPrefix::Standalone(bytes) => format!("{:3.0}  ", bytes),
+                NumberPrefix::Prefixed(prefix, n) => format!("{:3.0} {}", n, prefix),
             }
         );
     }
