@@ -3,14 +3,17 @@
 set -xe
 
 export RUST_BACKTRACE=1
+# allow warnings for now
+# export RUSTFLAGS="-D warnings -C target-cpu=native"
 # Enables additional cpu-specific optimizations.
-export RUSTFLAGS="-D warnings -C target-cpu=native"
+export RUSTFLAGS="-C target-cpu=native"
 
 # Currently, mlocking secrets is disabled due to secure memory limit issues.
 export MLOCK_SECRETS=false
 
-cargo clippy --all-targets -- --deny clippy::all
-cargo clippy --all-features --all-targets -- --deny clippy::all
+# allow warnings for now
+cargo clippy --all-targets # -- --deny clippy::all
+cargo clippy --all-features --all-targets # -- --deny clippy::all
 cargo fmt -- --check
 
 # We only test with mocktography, to ensure tests aren't unreasonably long.
@@ -20,7 +23,8 @@ cargo deadlinks --dir target/doc/hbbft/
 cargo audit
 
 cd hbbft_testing
-cargo clippy --all-targets -- --deny clippy::all
+# allow warnings for now
+cargo clippy --all-targets # -- --deny clippy::all
 cargo fmt -- --check
 cargo test --features=use-insecure-test-only-mock-crypto --release
 cd ..
