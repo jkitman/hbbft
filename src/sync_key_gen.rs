@@ -178,6 +178,7 @@ use std::string::ToString;
 use std::sync::Arc;
 
 use bincode;
+use crypto::group::CurveAffine;
 use failure::Fail;
 use rand::{self, Rng};
 use serde::{Deserialize, Serialize};
@@ -189,8 +190,8 @@ use crate::crypto::{
     serde_impl::FieldWrap,
     Fr, G1Affine, PublicKeySet, SecretKeyShare,
 };
-use crate::pairing::{CurveAffine, Field};
 use crate::NodeIdT;
+use threshold_crypto::ff::Field;
 
 /// A cryptographic key that allows decrypting messages that were encrypted to the key's owner.
 pub trait SecretKey {
