@@ -1,9 +1,9 @@
 //! Test network errors
 
+use std::error::Error;
 use std::fmt::{self, Debug, Display};
 use std::time;
 
-use failure;
 use threshold_crypto as crypto;
 
 use hbbft::ConsensusProtocol;
@@ -166,11 +166,11 @@ where
     }
 }
 
-impl<D> failure::Fail for CrankError<D>
+impl<D> Error for CrankError<D>
 where
     D: ConsensusProtocol + 'static,
 {
-    fn cause(&self) -> Option<&dyn failure::Fail> {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
             CrankError::HandleInput(err) | CrankError::HandleInputAll(err) => Some(err),
             CrankError::HandleMessage { err, .. } => Some(err),
