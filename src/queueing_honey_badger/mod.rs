@@ -26,10 +26,10 @@ use std::marker::PhantomData;
 use std::{cmp, iter};
 
 use derivative::Derivative;
+use failure::Fail;
 use rand::distributions::{Distribution, Standard};
 use rand::Rng;
 use serde::{de::DeserializeOwned, Serialize};
-use thiserror::Error;
 
 use crate::crypto::{PublicKey, SecretKey};
 use crate::dynamic_honey_badger::{
@@ -41,19 +41,19 @@ use crate::{ConsensusProtocol, Contribution, NetworkInfo, NodeIdT};
 pub use crate::dynamic_honey_badger::{Change, ChangeState, Input};
 
 /// Queueing honey badger error variants.
-#[derive(Debug, Error)]
+#[derive(Debug, Fail)]
 pub enum Error {
     /// Failed to handle input.
-    #[error("Input error: {0}")]
+    #[fail(display = "Input error: {}", _0)]
     Input(dynamic_honey_badger::Error),
     /// Failed to handle a message.
-    #[error("Handle message error: {0}")]
+    #[fail(display = "Handle message error: {}", _0)]
     HandleMessage(dynamic_honey_badger::Error),
     /// Failed to propose a contribution.
-    #[error("Propose error: {0}")]
+    #[fail(display = "Propose error: {}", _0)]
     Propose(dynamic_honey_badger::Error),
     /// Failed to create a Dynamic Honey Badger instance according to a join plan.
-    #[error("New joining error: {0}")]
+    #[fail(display = "New joining error: {}", _0)]
     NewJoining(dynamic_honey_badger::Error),
 }
 
