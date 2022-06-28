@@ -1,0 +1,25 @@
+on: [push, pull_request]
+
+name: CI
+
+jobs:
+  build_and_unit_test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v1
+      - name: Print toolchain version
+        uses: actions-rs/cargo@v1
+        with:
+          command: version
+      - uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-deadlinks
+      - name: Checks
+        run: ./ci.sh
