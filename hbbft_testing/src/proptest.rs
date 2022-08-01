@@ -9,16 +9,17 @@ use proptest::prelude::Rng;
 use proptest::strategy::{Strategy, ValueTree};
 use proptest::test_runner::{Reason, TestRunner};
 use rand::{self, SeedableRng};
+use rand::rngs::StdRng;
 
 /// Random number generator type used in testing.
-pub type TestRng = rand_xorshift::XorShiftRng;
+pub type TestRng = StdRng;
 
 /// Seed type of the random number generator used in testing.
-pub type TestRngSeed = [u8; 16];
+pub type TestRngSeed = [u8; 32];
 
 /// Generates a random instance of a random number generator.
 pub fn gen_rng() -> impl Strategy<Value = TestRng> {
-    gen_seed().prop_map(TestRng::from_seed)
+    gen_seed().prop_map(StdRng::from_seed)
 }
 
 /// Generates a random seed to instantiate a `TestRng`.

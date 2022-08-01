@@ -63,7 +63,7 @@
 //! use hbbft::sync_key_gen::{to_pub_keys, AckOutcome, PartOutcome, PubKeyMap, SyncKeyGen};
 //!
 //! // Use the OS random number generator for any randomness:
-//! let mut rng = rand::rngs::OsRng::new().expect("Could not open OS random number generator.");
+//! let mut rng = rand::rngs::OsRng::default();
 //!
 //! // Two out of four shares will suffice to sign or encrypt something.
 //! let (threshold, node_num) = (1, 4);
@@ -189,7 +189,8 @@ use crate::crypto::{
     serde_impl::FieldWrap,
     Fr, G1Affine, PublicKeySet, SecretKeyShare,
 };
-use crate::pairing::{CurveAffine, Field};
+use threshold_crypto::ff::Field;
+use threshold_crypto::group::CurveAffine;
 use crate::NodeIdT;
 
 /// A cryptographic key that allows decrypting messages that were encrypted to the key's owner.
@@ -518,7 +519,7 @@ impl<N: NodeIdT, PK: PublicKey> SyncKeyGen<N, PK> {
         let mut opt_sk_val = self.our_idx.map(|_| Fr::zero());
         let is_complete = |part: &&ProposalState| part.is_complete(self.threshold);
         for part in self.parts.values().filter(is_complete) {
-            pk_commit += part.commit.row(0);
+            pk_commit += part.commit.row(0 as usize);
             if let Some(sk_val) = opt_sk_val.as_mut() {
                 let row = Poly::interpolate(part.values.iter().take(self.threshold + 1));
                 sk_val.add_assign(&row.evaluate(0));
