@@ -178,7 +178,6 @@ use std::string::ToString;
 use std::sync::Arc;
 
 use bincode;
-use crypto::group::CurveAffine;
 use rand::{self, Rng};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -188,10 +187,11 @@ use crate::crypto::{
     error::Error as CryptoError,
     poly::{BivarCommitment, BivarPoly, Poly},
     serde_impl::FieldWrap,
-    Fr, G1Affine, PublicKeySet, SecretKeyShare,
+    Scalar, G1Affine, PublicKeySet, SecretKeyShare,
 };
+use std::ops::Mul;
 use crate::NodeIdT;
-use threshold_crypto::ff::Field;
+use std::ops::AddAssign;
 
 /// A cryptographic key that allows decrypting messages that were encrypted to the key's owner.
 pub trait SecretKey {
@@ -324,7 +324,7 @@ struct ProposalState {
     /// The proposer's commitment.
     commit: BivarCommitment,
     /// The verified values we received from `Ack` messages.
-    values: BTreeMap<u64, Fr>,
+    values: BTreeMap<u64, Scalar>,
     /// The nodes which have acked this part, valid or not.
     acks: BTreeSet<u64>,
 }
@@ -516,7 +516,7 @@ impl<N: NodeIdT, PK: PublicKey> SyncKeyGen<N, PK> {
     /// messages before calling this method. Otherwise their key shares will not match.
     pub fn generate(&self) -> Result<(PublicKeySet, Option<SecretKeyShare>), Error> {
         let mut pk_commit = Poly::zero().commitment();
-        let mut opt_sk_val = self.our_idx.map(|_| Fr::zero());
+        let mut opt_sk_val = self.our_idx.map(|_| Scalar::zero());
         let is_complete = |part: &&ProposalState| part.is_complete(self.threshold);
         for part in self.parts.values().filter(is_complete) {
             pk_commit += part.commit.row(0);
@@ -598,10 +598,10 @@ impl<N: NodeIdT, PK: PublicKey> SyncKeyGen<N, PK> {
             .sec_key
             .decrypt(&values[our_idx as usize])
             .map_err(|_| AckFault::DecryptValue)?;
-        let val = bincode::deserialize::<FieldWrap<Fr>>(&ser_val)
+        let val = bincode::deserialize::<FieldWrap<Scalar>>(&ser_val)
             .map_err(|_| AckFault::DeserializeValue)?
             .into_inner();
-        if part.commit.evaluate(our_idx + 1, sender_idx + 1) != G1Affine::one().mul(val) {
+        if part.commit.evaluate(our_idx + 1, sender_idx + 1) != G1Affine::generator().mul(val) {
             return Err(AckFault::ValueCommitment);
         }
         part.values.insert(sender_idx + 1, val);

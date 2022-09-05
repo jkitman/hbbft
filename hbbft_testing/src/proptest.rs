@@ -124,9 +124,9 @@ impl NetworkDimensionTree {
         // A common mistake, add an extra assert for a more helpful error message.
         assert!(min_size > 0, "minimum network size is 1");
 
-        let total = rng.gen_range(min_size, max_size + 1);
+        let total = rng.gen_range(min_size..max_size + 1);
         let max_faulty = (total - 1) / 3;
-        let faulty = rng.gen_range(0, max_faulty + 1);
+        let faulty = rng.gen_range(0..max_faulty + 1);
 
         let high = NetworkDimension::new(total, faulty);
 

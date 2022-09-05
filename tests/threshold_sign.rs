@@ -112,7 +112,7 @@ where
     let mut sizes = vec![last_size];
     let num_sizes = (GOOD_SAMPLE_SET.log2() - (num_samples as f64).log2()) as usize;
     for _ in 0..num_sizes {
-        last_size += rng.gen_range(3, 7);
+        last_size += rng.gen_range(3..7);
         sizes.push(last_size);
     }
 

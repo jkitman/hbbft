@@ -19,7 +19,7 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 use std::{fmt, result};
 
-use crate::crypto::{self, hash_g2, Signature, SignatureShare, G2};
+use crate::crypto::{self, hash_g2, Signature, SignatureShare, G2Projective};
 use log::debug;
 use rand::Rng;
 use rand_derive::Rand;
@@ -77,7 +77,7 @@ pub struct Message(pub SignatureShare);
 pub struct ThresholdSign<N> {
     netinfo: Arc<NetworkInfo<N>>,
     /// The hash of the document to be signed.
-    doc_hash: Option<G2>,
+    doc_hash: Option<G2Projective>,
     /// All received threshold signature shares, together with the node index.
     received_shares: BTreeMap<N, (usize, SignatureShare)>,
     /// Whether we already sent our shares.
@@ -244,7 +244,7 @@ impl<N: NodeIdT> ThresholdSign<N> {
         }
     }
 
-    fn combine_and_verify_sig(&self, hash: G2) -> Result<Signature> {
+    fn combine_and_verify_sig(&self, hash: G2Projective) -> Result<Signature> {
         // Pass the indices of sender nodes to `combine_signatures`.
         let shares_itr = self
             .received_shares

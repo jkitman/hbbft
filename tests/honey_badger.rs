@@ -210,7 +210,7 @@ fn test_honey_badger_different_sizes<A, F>(
     let _ = env_logger::try_init();
 
     let mut rng: TestRng = TestRng::from_seed(seed);
-    let sizes = vec![1, 2, 3, 5, rng.gen_range(6, 10)];
+    let sizes = vec![1, 2, 3, 5, rng.gen_range(6..10)];
     for size in sizes {
         // cloning since it gets moved into a closure
         let cloned_netinfo_map = adversary_netinfo.clone();

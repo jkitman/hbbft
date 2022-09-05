@@ -391,7 +391,7 @@ where
 {
     let l = net.get_messages().len();
     if l > 0 {
-        net.swap_messages(0, rng.gen_range(0, l));
+        net.swap_messages(0, rng.gen_range(0..l));
     }
 }
 
@@ -410,7 +410,7 @@ where
         // Pick a node id at random
         return Some(
             net.nodes_mut()
-                .nth(rng.gen_range(0, l))
+                .nth(rng.gen_range(0..l))
                 .expect("nodes list changed since last call")
                 .id(),
         );

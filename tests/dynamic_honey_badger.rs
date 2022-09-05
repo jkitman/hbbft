@@ -499,9 +499,9 @@ where
             "the network is already captured by the faulty nodes"
         );
 
-        let new_n = rng.gen_range(2, n); // new_n is between 2 and n-1
+        let new_n = rng.gen_range(2..n); // new_n is between 2 and n-1
         let min_new_f = f.saturating_sub(n - new_n);
-        let new_f = rng.gen_range(min_new_f, f.min(util::max_faulty(new_n)) + 1);
+        let new_f = rng.gen_range(min_new_f..f.min(util::max_faulty(new_n)) + 1);
 
         let remove_from_faulty = f - new_f;
         let remove_from_correct = n - new_n - remove_from_faulty;

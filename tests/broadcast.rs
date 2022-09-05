@@ -153,8 +153,8 @@ where
 {
     let mut rng: TestRng = TestRng::from_seed(seed);
     let sizes = (1..6)
-        .chain(once(rng.gen_range(6, 20)))
-        .chain(once(rng.gen_range(30, 50)));
+        .chain(once(rng.gen_range(6..20)))
+        .chain(once(rng.gen_range(30..50)));
     for size in sizes {
         // cloning since it gets moved into a closure
         let num_faulty_nodes = util::max_faulty(size);
@@ -164,7 +164,7 @@ where
             num_faulty_nodes
         );
 
-        let proposer_id = rng.gen_range(0, size) as NodeId;
+        let proposer_id = rng.gen_range(0..size) as NodeId;
 
         let (net, _) = NetBuilder::new(0..size as u16)
             .num_faulty(num_faulty_nodes as usize)
@@ -237,7 +237,7 @@ fn do_test_8_broadcast_equal_leaves_silent(seed: TestRngSeed) {
     let size = 8;
 
     let num_faulty = 0;
-    let proposer_id = rng.gen_range(0, size);
+    let proposer_id = rng.gen_range(0..size);
     let (net, _) = NetBuilder::new(0..size as u16)
         .num_faulty(num_faulty as usize)
         .message_limit(10_000 * size as usize)

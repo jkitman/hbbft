@@ -23,5 +23,5 @@ macro_rules! try_some {
 pub fn randomly<R: Rng>(probability: f32, rng: &mut R) -> bool {
     assert!(probability <= 1.0);
     assert!(probability >= 0.0);
-    rng.gen_range(0.0, 1.0) <= probability
+    rng.gen_range(0.0..1.0) <= probability
 }
