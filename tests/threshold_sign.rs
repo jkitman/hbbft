@@ -158,19 +158,19 @@ proptest! {
 
     #[test]
     fn test_coin_random_silent_200_samples(seed in gen_seed()) {
-        let new_adversary = || ReorderingAdversary::new();
+        let new_adversary = ReorderingAdversary::new;
         test_coin_different_sizes(new_adversary, 200, seed);
     }
 
     #[test]
     fn test_coin_first_silent_50_samples(seed in gen_seed()) {
-        let new_adversary = || NodeOrderAdversary::new();
+        let new_adversary = NodeOrderAdversary::new;
         test_coin_different_sizes(new_adversary, 50, seed);
     }
 
     #[test]
     fn test_threshold_sign(seed in gen_seed()) {
-        let new_adversary = || ReorderingAdversary::new();
+        let new_adversary = ReorderingAdversary::new;
         test_threshold_sign_different_sizes(new_adversary, seed);
     }
 }

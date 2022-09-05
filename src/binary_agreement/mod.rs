@@ -106,7 +106,7 @@ impl From<bincode::Error> for Error {
 pub type Result<T> = ::std::result::Result<T, Error>;
 
 /// A faulty Binary Agreement message received from a peer.
-#[derive(Clone, Debug, Error, PartialEq)]
+#[derive(Clone, Debug, Error, PartialEq, Eq)]
 pub enum FaultKind {
     /// `BinaryAgreement` received a duplicate `BVal` message.
     #[error("`BinaryAgreement` received a duplicate `BVal` message.")]
@@ -131,7 +131,7 @@ pub enum FaultKind {
 pub type Step<N> = crate::Step<Message, bool, N, FaultKind>;
 
 /// The content of a message belonging to a particular `BinaryAgreement` epoch.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 pub enum MessageContent {
     /// Synchronized Binary Value Broadcast message.
     SbvBroadcast(sbv_broadcast::Message),
@@ -153,6 +153,7 @@ impl MessageContent {
     }
 
     /// Returns `true` if this message can be ignored if its epoch has already passed.
+    #[allow(clippy::match_like_matches_macro)]
     pub fn can_expire(&self) -> bool {
         match *self {
             MessageContent::Term(_) => false,
@@ -162,7 +163,7 @@ impl MessageContent {
 }
 
 /// Messages sent during the Binary Agreement stage.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Rand)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Rand)]
 pub struct Message {
     /// The `BinaryAgreement` epoch this message belongs to.
     pub epoch: u64,

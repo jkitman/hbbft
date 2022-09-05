@@ -47,7 +47,7 @@ pub enum Error {
 pub type Result<T> = ::std::result::Result<T, Error>;
 
 /// A threshold decryption message fault
-#[derive(Clone, Debug, Error, PartialEq)]
+#[derive(Clone, Debug, Error, PartialEq, Eq)]
 pub enum FaultKind {
     /// `ThresholdDecrypt` received multiple shares from the same sender.
     #[error("`ThresholdDecrypt` received multiple shares from the same sender.")]
@@ -61,7 +61,7 @@ pub enum FaultKind {
 pub type FaultLog<N> = fault_log::FaultLog<N, FaultKind>;
 
 /// A Threshold Decryption message.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Rand)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Rand)]
 pub struct Message(pub DecryptionShare);
 
 /// A Threshold Decrypt algorithm instance. If every node inputs the same data, encrypted to the

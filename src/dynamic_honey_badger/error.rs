@@ -33,7 +33,7 @@ pub enum Error {
 /// The result of `DynamicHoneyBadger` handling an input or message.
 pub type Result<T> = ::std::result::Result<T, Error>;
 /// Represents each way an an incoming message can be considered faulty.
-#[derive(Clone, Debug, Error, PartialEq)]
+#[derive(Clone, Debug, Error, PartialEq, Eq)]
 pub enum FaultKind {
     /// `DynamicHoneyBadger` received a key generation message with an invalid signature.
     #[error("`DynamicHoneyBadger` received a key generation message with an invalid signature.")]

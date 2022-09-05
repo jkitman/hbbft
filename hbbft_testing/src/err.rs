@@ -71,26 +71,34 @@ where
             CrankError::HandleInput(err) => {
                 write!(f, "The algorithm could not process input: {:?}", err)
             }
-            CrankError::HandleInputAll(err) => write!(
-                f,
-                "The algorithm could not process input to all nodes: {:?}",
-                err
-            ),
-            CrankError::HandleMessage { msg, err } => write!(
-                f,
-                "The algorithm could not process network message {:?}. Error: {:?}",
-                msg, err
-            ),
-            CrankError::NodeDisappearedInCrank(id) => write!(
-                f,
-                "Node {:?} disappeared or never existed, while it was cranked.",
-                id
-            ),
-            CrankError::NodeDisappearedInDispatch(id) => write!(
-                f,
-                "Node {:?} disappeared or never existed, while it still had incoming messages.",
-                id
-            ),
+            CrankError::HandleInputAll(err) => {
+                write!(
+                    f,
+                    "The algorithm could not process input to all nodes: {:?}",
+                    err
+                )
+            }
+            CrankError::HandleMessage { msg, err } => {
+                write!(
+                    f,
+                    "The algorithm could not process network message {:?}. Error: {:?}",
+                    msg, err
+                )
+            }
+            CrankError::NodeDisappearedInCrank(id) => {
+                write!(
+                    f,
+                    "Node {:?} disappeared or never existed, while it was cranked.",
+                    id
+                )
+            }
+            CrankError::NodeDisappearedInDispatch(id) => {
+                write!(
+                    f,
+                    "Node {:?} disappeared or never existed, while it still had incoming messages.",
+                    id
+                )
+            }
             CrankError::CrankLimitExceeded(max) => {
                 write!(f, "Maximum number of cranks exceeded: {}", max)
             }
@@ -104,16 +112,16 @@ where
                 reported_by,
                 faulty_id,
                 fault_kind,
-            } => write!(
-                f,
-                "Correct node {:?} reported node {:?} as faulty: {:?}.",
-                reported_by, faulty_id, fault_kind
-            ),
-            CrankError::InitialKeyGeneration(err) => write!(
-                f,
-                "An error occurred while generating initial keys for threshold cryptography: {:?}.",
-                err
-            ),
+            } => {
+                write!(
+                    f,
+                    "Correct node {:?} reported node {:?} as faulty: {:?}.",
+                    reported_by, faulty_id, fault_kind
+                )
+            }
+            CrankError::InitialKeyGeneration(err) => {
+                write!(f, "An error occurred while generating initial keys for threshold cryptography: {:?}.", err)
+            }
         }
     }
 }

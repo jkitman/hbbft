@@ -6,7 +6,7 @@ use crate::binary_agreement;
 use crate::broadcast;
 
 /// A subset error.
-#[derive(Clone, PartialEq, Debug, Error)]
+#[derive(Clone, PartialEq, Eq, Debug, Error)]
 pub enum Error {
     /// Error creating `BinaryAgreement`.
     #[error("Error creating BinaryAgreement: {0}")]
@@ -29,7 +29,7 @@ pub enum Error {
 pub type Result<T> = result::Result<T, Error>;
 
 /// Faults that can be detected in Subset.
-#[derive(Clone, Debug, Error, PartialEq)]
+#[derive(Clone, Debug, Error, PartialEq, Eq)]
 pub enum FaultKind {
     /// `Subset` received a faulty Broadcast message.
     #[error("`Subset` received a faulty Broadcast message.")]

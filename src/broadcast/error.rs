@@ -1,7 +1,7 @@
 use thiserror::Error;
 
 /// A broadcast error.
-#[derive(Clone, PartialEq, Debug, Error)]
+#[derive(Clone, PartialEq, Eq, Debug, Error)]
 pub enum Error {
     /// Due to a limitation in `reed_solomon_erasure`, only up to 256 nodes are supported.
     #[error("Number of participants must be between 1 and 256")]
@@ -24,7 +24,7 @@ pub enum Error {
 pub type Result<T> = ::std::result::Result<T, Error>;
 
 /// Represents each reason why a broadcast message could be faulty.
-#[derive(Clone, Debug, Error, PartialEq)]
+#[derive(Clone, Debug, Error, PartialEq, Eq)]
 pub enum FaultKind {
     /// `Broadcast` received a `Value` from a node other than the proposer.
     #[error("`Broadcast` received a `Value` from a node other than the proposer.")]

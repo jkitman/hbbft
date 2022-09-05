@@ -268,7 +268,7 @@ where
 
     /// Returns the information about the node IDs in the network, and the cryptographic keys.
     pub fn netinfo(&self) -> &Arc<NetworkInfo<N>> {
-        &self.honey_badger.netinfo()
+        self.honey_badger.netinfo()
     }
 
     /// Returns a reference to the internal managed `HoneyBadger` instance.
@@ -495,7 +495,7 @@ where
     ) -> Result<Step<C, N>> {
         let outcome = if let Some(kgs) = self.key_gen_state.as_mut() {
             kgs.key_gen
-                .handle_part(&sender_id, part, rng)
+                .handle_part(sender_id, part, rng)
                 .map_err(Error::SyncKeyGen)?
         } else {
             // No key generation ongoing.
@@ -575,7 +575,7 @@ where
         kg_msg: &KeyGenMessage,
     ) -> Result<bool> {
         let ser = bincode::serialize(kg_msg).map_err(|err| Error::SerializeKeyGen(*err))?;
-        let verify = |opt_pk: Option<&PublicKey>| opt_pk.map_or(false, |pk| pk.verify(&sig, &ser));
+        let verify = |opt_pk: Option<&PublicKey>| opt_pk.map_or(false, |pk| pk.verify(sig, &ser));
         let kgs = self.key_gen_state.as_ref();
         let current_key = self.pub_keys.get(node_id);
         let candidate_key = kgs.and_then(|kgs| kgs.public_keys().get(node_id));

@@ -32,7 +32,7 @@ pub enum Error {
 pub type Result<T> = ::std::result::Result<T, Error>;
 
 /// Faults detectable from receiving honey badger messages
-#[derive(Clone, Debug, Error, PartialEq)]
+#[derive(Clone, Debug, Error, PartialEq, Eq)]
 pub enum FaultKind {
     /// `HoneyBadger` received a decryption share for an unaccepted proposer.
     #[error("`HoneyBadger` received a decryption share for an unaccepted proposer.")]

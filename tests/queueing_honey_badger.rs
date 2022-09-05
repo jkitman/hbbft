@@ -16,8 +16,8 @@ use proptest::{prelude::ProptestConfig, proptest};
 use rand::{Rng, SeedableRng};
 
 type NodeId = u16;
-type QHB = QueueingHoneyBadger<usize, NodeId, Vec<usize>>;
-type SQ = SenderQueue<QHB>;
+type Qhb = QueueingHoneyBadger<usize, NodeId, Vec<usize>>;
+type SQ = SenderQueue<Qhb>;
 
 // Send the second half of the transactions to the specified node.
 fn input_second_half<A>(
@@ -112,7 +112,7 @@ where
     // Handle messages in random order until all nodes have output all transactions.
     while net.correct_nodes().any(node_busy) {
         let stepped_id = net.crank_expect(&mut rng).0;
-        if awaiting_removal.contains(&stepped_id) && has_remove(&net.get(stepped_id).unwrap()) {
+        if awaiting_removal.contains(&stepped_id) && has_remove(net.get(stepped_id).unwrap()) {
             awaiting_removal.remove(&stepped_id);
             info!(
                 "{:?} has finished waiting for node removal; still waiting: {:?}",
@@ -174,7 +174,7 @@ where
 
         if rejoined_first_correct && awaiting_second_half.contains(&stepped_id) {
             // Input the second half of user transactions into the stepped node.
-            input_second_half(&mut net, stepped_id, num_txs, &mut rng);
+            input_second_half(&mut net, stepped_id, num_txs, rng);
             awaiting_second_half.remove(&stepped_id);
         }
     }
@@ -186,6 +186,7 @@ where
 }
 
 /// Restarts specified node on the test network for adding it back as a validator.
+#[allow(clippy::needless_collect)]
 fn restart_node_for_add<R, A>(
     net: &mut VirtualNet<SQ, A>,
     mut node: Node<SQ>,
@@ -221,7 +222,7 @@ where
 
 // Allow passing `netinfo` by value. `TestNetwork` expects this function signature.
 #[allow(clippy::needless_pass_by_value)]
-fn new_queueing_hb(node_info: NewNodeInfo<SQ>, seed: TestRngSeed) -> (SQ, Step<QHB>) {
+fn new_queueing_hb(node_info: NewNodeInfo<SQ>, seed: TestRngSeed) -> (SQ, Step<Qhb>) {
     let mut rng: TestRng = TestRng::from_seed(seed);
     let peer_ids = node_info.netinfo.other_ids().cloned();
     let netinfo = node_info.netinfo.clone();

@@ -13,7 +13,7 @@ use hbbft_testing::{NetBuilder, NewNodeInfo, Node, VirtualNet};
 use proptest::{prelude::ProptestConfig, prop_compose, proptest};
 use rand::{seq::SliceRandom, SeedableRng};
 
-type DHB = SenderQueue<DynamicHoneyBadger<Vec<usize>, usize>>;
+type Dhb = SenderQueue<DynamicHoneyBadger<Vec<usize>, usize>>;
 
 /// Chooses a node's contribution for an epoch.
 ///
@@ -409,7 +409,7 @@ fn do_drop_and_re_add(cfg: TestConfig) {
         .correct_nodes()
         .filter(|node| !nodes_for_remove.contains(node.id()))
         .map(|node| {
-            state.net.verify_batches(&node);
+            state.net.verify_batches(node);
             node.outputs()
         })
         .collect();
@@ -420,15 +420,16 @@ fn do_drop_and_re_add(cfg: TestConfig) {
 }
 
 /// Restarts specified node on the test network for adding it back as a validator.
+#[allow(clippy::needless_collect)]
 fn restart_node_for_add<R, A>(
-    net: &mut VirtualNet<DHB, A>,
-    mut node: Node<DHB>,
+    net: &mut VirtualNet<Dhb, A>,
+    mut node: Node<Dhb>,
     join_plan: JoinPlan<usize>,
     rng: &mut R,
 ) -> Step<DynamicHoneyBadger<Vec<usize>, usize>>
 where
     R: rand::Rng,
-    A: Adversary<DHB>,
+    A: Adversary<Dhb>,
 {
     println!("Restarting node {} with {:?}", node.id(), join_plan);
     // TODO: When an observer node is added to the network, it should also be added to peer_ids.
@@ -449,27 +450,27 @@ where
 /// Internal state of the test.
 struct TestState<A>
 where
-    A: Adversary<DHB>,
+    A: Adversary<Dhb>,
 {
     /// The test network.
-    net: VirtualNet<DHB, A>,
+    net: VirtualNet<Dhb, A>,
     /// The join plan for adding nodes.
     join_plan: Option<JoinPlan<usize>>,
     /// The epoch in which the removed nodes should go offline.
     re_add_epoch: Option<u64>,
     /// The removed nodes which are to be restarted as soon as all remaining
     /// validators agree to add them back.
-    saved_nodes: Vec<Node<DHB>>,
+    saved_nodes: Vec<Node<Dhb>>,
     /// Whether the old subset of validators was applied back to the network.
     old_subset_applied: bool,
 }
 
 impl<A> TestState<A>
 where
-    A: Adversary<DHB>,
+    A: Adversary<Dhb>,
 {
     /// Constructs a new `VirtualNetState`.
-    fn new(net: VirtualNet<DHB, A>) -> Self {
+    fn new(net: VirtualNet<Dhb, A>) -> Self {
         TestState {
             net,
             join_plan: None,

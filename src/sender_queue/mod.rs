@@ -243,6 +243,7 @@ where
     }
 
     /// Processes an announcement of a new epoch update received from a remote node.
+    #[allow(clippy::needless_collect)]
     fn process_new_epoch(&mut self, sender_id: &D::NodeId, epoch: D::Epoch) -> CpStep<Self> {
         let queue = match self.outgoing_queue.get_mut(sender_id) {
             None => return CpStep::<Self>::default(),
@@ -306,7 +307,7 @@ where
                     .difference(&next_participants)
                 {
                     // Begin the participant removal process.
-                    self.remove_participant_after(&id, &batch.output_epoch());
+                    self.remove_participant_after(id, &batch.output_epoch());
                 }
                 if self.participants_after_change.contains(&self.our_id)
                     && !next_participants.contains(&self.our_id)
@@ -348,7 +349,7 @@ where
     /// superseded by a new set of participants of which it is not a member. Returns `true` if the
     /// participant has been removed and `false` otherwise.
     fn remove_participant_after(&mut self, id: &D::NodeId, last_epoch: &D::Epoch) -> bool {
-        self.last_epochs.insert(id.clone(), last_epoch.clone());
+        self.last_epochs.insert(id.clone(), *last_epoch);
         self.remove_participant_if_old(id)
     }
 
@@ -379,10 +380,10 @@ where
                     return false;
                 }
             }
-            self.peer_epochs.remove(&id);
-            self.outgoing_queue.remove(&id);
+            self.peer_epochs.remove(id);
+            self.outgoing_queue.remove(id);
         }
-        self.last_epochs.remove(&id);
+        self.last_epochs.remove(id);
         true
     }
 

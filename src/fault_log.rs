@@ -9,7 +9,7 @@ use std::error::Error;
 /// A structure representing the context of a faulty node. This structure
 /// describes which node is faulty (`node_id`) and which faulty behavior
 /// that the node exhibited (`kind`).
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Fault<N, F: Error> {
     /// The faulty node's ID.
     pub node_id: N,
@@ -41,6 +41,7 @@ where
 
 /// Creates a new `FaultLog` where `self` is the first element in the log
 /// vector.
+#[allow(clippy::from_over_into)]
 impl<N, F> Into<FaultLog<N, F>> for Fault<N, F>
 where
     F: Error,
@@ -51,7 +52,7 @@ where
 }
 
 /// A structure used to contain reports of faulty node behavior.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct FaultLog<N, F: Error>(pub Vec<Fault<N, F>>);
 
 impl<N, F> FaultLog<N, F>

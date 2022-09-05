@@ -294,7 +294,7 @@ impl<N: NodeIdT, S: SessionIdT> BinaryAgreement<N, S> {
         sender_id: &N,
         msg: &sbv_broadcast::Message,
     ) -> Result<Step<N>> {
-        let sbvb_step = self.sbv_broadcast.handle_message(sender_id, &msg)?;
+        let sbvb_step = self.sbv_broadcast.handle_message(sender_id, msg)?;
         self.handle_sbvb_step(sbvb_step)
     }
 
@@ -375,7 +375,7 @@ impl<N: NodeIdT, S: SessionIdT> BinaryAgreement<N, S> {
         self.conf_values = Some(values);
 
         if !self.netinfo.is_validator() {
-            return Ok(self.try_finish_conf_round()?);
+            return self.try_finish_conf_round();
         }
 
         self.send(MessageContent::Conf(values))

@@ -143,7 +143,7 @@ impl<N: NodeIdT> SbvBroadcast<N> {
         }
         let step: Step<_> = Target::all().message(msg.clone()).into();
         let our_id = &self.netinfo.our_id().clone();
-        Ok(step.join(self.handle_message(our_id, &msg)?))
+        Ok(step.join(self.handle_message(our_id, msg)?))
     }
 
     /// Handles an `Aux` message.

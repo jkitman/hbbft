@@ -376,7 +376,7 @@ where
     D::Output: Clone,
     A: Adversary<D>,
 {
-    net.sort_messages_by(|a, b| a.to().cmp(&b.to()))
+    net.sort_messages_by(|a, b| a.to().cmp(b.to()))
 }
 
 /// Utility function to swap the topmost message with a random message in the queue

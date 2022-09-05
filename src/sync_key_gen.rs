@@ -187,11 +187,11 @@ use crate::crypto::{
     error::Error as CryptoError,
     poly::{BivarCommitment, BivarPoly, Poly},
     serde_impl::FieldWrap,
-    Scalar, G1Affine, PublicKeySet, SecretKeyShare,
+    G1Affine, PublicKeySet, Scalar, SecretKeyShare,
 };
-use std::ops::Mul;
 use crate::NodeIdT;
 use std::ops::AddAssign;
+use std::ops::Mul;
 
 /// A cryptographic key that allows decrypting messages that were encrypted to the key's owner.
 pub trait SecretKey {
@@ -415,7 +415,7 @@ impl<N: NodeIdT, PK: PublicKey> SyncKeyGen<N, PK> {
         let commit = our_part.commitment();
         let encrypt = |(i, pk): (usize, &PK)| {
             let row = bincode::serialize(&our_part.row(i + 1))?;
-            Ok(pk.encrypt(&row, rng).map_err(Error::encrypt)?)
+            pk.encrypt(&row, rng).map_err(Error::encrypt)
         };
         let rows = key_gen
             .pub_keys

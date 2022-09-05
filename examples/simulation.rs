@@ -206,10 +206,9 @@ where
 
     /// Returns the time when the next message can be handled.
     fn next_event_time(&self) -> Option<Duration> {
-        match self.in_queue.front() {
-            None => None,
-            Some(ts_msg) => Some(cmp::max(ts_msg.time, self.time)),
-        }
+        self.in_queue
+            .front()
+            .map(|ts_msg| cmp::max(ts_msg.time, self.time))
     }
 
     /// Returns the number of messages this node has handled so far.
@@ -330,7 +329,7 @@ struct EpochInfo {
     nodes: BTreeMap<NodeId, (Duration, Batch<Transaction, NodeId>)>,
 }
 
-type QHB = SenderQueue<QueueingHoneyBadger<Transaction, NodeId, Vec<Transaction>>>;
+type Qhb = SenderQueue<QueueingHoneyBadger<Transaction, NodeId, Vec<Transaction>>>;
 
 impl EpochInfo {
     /// Adds a batch to this epoch. Prints information if the epoch is complete.
@@ -339,7 +338,7 @@ impl EpochInfo {
         id: NodeId,
         time: Duration,
         batch: &Batch<Transaction, NodeId>,
-        network: &TestNetwork<QHB>,
+        network: &TestNetwork<Qhb>,
     ) {
         if self.nodes.contains_key(&id) {
             return;
@@ -373,7 +372,7 @@ impl EpochInfo {
 }
 
 /// Proposes `num_txs` values and expects nodes to output and order them.
-fn simulate_honey_badger<R: Rng>(mut network: TestNetwork<QHB>, rng: &mut R) {
+fn simulate_honey_badger<R: Rng>(mut network: TestNetwork<Qhb>, rng: &mut R) {
     // Handle messages until all nodes have output all transactions.
     println!(
         "{}",
@@ -399,6 +398,7 @@ fn parse_args() -> Result<Args, docopt::Error> {
         .deserialize()
 }
 
+#[allow(clippy::needless_collect)]
 fn main() {
     env_logger::init();
     let mut rng = OsRng;

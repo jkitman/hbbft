@@ -16,8 +16,7 @@ cargo clippy --all-targets # -- --deny clippy::all
 cargo clippy --all-features --all-targets # -- --deny clippy::all
 cargo fmt -- --check
 
-# We only test with mocktography, to ensure tests aren't unreasonably long.
-cargo test --features=use-insecure-test-only-mock-crypto --release
+cargo test --release
 cargo doc
 cargo deadlinks --dir target/doc/hbbft/
 cargo audit
@@ -26,5 +25,5 @@ cd hbbft_testing
 # allow warnings for now
 cargo clippy --all-targets # -- --deny clippy::all
 cargo fmt -- --check
-cargo test --features=use-insecure-test-only-mock-crypto --release
+cargo test --release
 cd ..

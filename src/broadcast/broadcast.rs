@@ -251,7 +251,7 @@ impl<N: NodeIdT> Broadcast<N> {
         };
 
         // If the proof is invalid, log the faulty node behavior and ignore.
-        if !self.validate_proof(&p, &self.our_id()) {
+        if !self.validate_proof(&p, self.our_id()) {
             return Ok(Fault::new(sender_id.clone(), FaultKind::InvalidProof).into());
         }
 
@@ -347,11 +347,11 @@ impl<N: NodeIdT> Broadcast<N> {
         self.echos
             .insert(sender_id.clone(), EchoContent::Hash(*hash));
 
-        if self.ready_sent || self.count_echos(&hash) < self.val_set.num_correct() {
-            return self.compute_output(&hash);
+        if self.ready_sent || self.count_echos(hash) < self.val_set.num_correct() {
+            return self.compute_output(hash);
         }
         // Upon receiving `N - f` `Echo`s with this root hash, multicast `Ready`.
-        self.send_ready(&hash)
+        self.send_ready(hash)
     }
 
     /// Handles a received `CanDecode` message.
@@ -486,7 +486,7 @@ impl<N: NodeIdT> Broadcast<N> {
 
     /// Sends a `CanDecode` message and handles it. Does nothing if we are only an observer.
     fn send_can_decode(&mut self, hash: &Digest) -> Result<Step<N>> {
-        self.can_decode_sent.insert(hash.clone());
+        self.can_decode_sent.insert(*hash);
         if !self.val_set.contains(&self.our_id) {
             return Ok(Step::default());
         }

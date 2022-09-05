@@ -19,7 +19,7 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 use std::{fmt, result};
 
-use crate::crypto::{self, hash_g2, Signature, SignatureShare, G2Projective};
+use crate::crypto::{self, hash_g2, G2Projective, Signature, SignatureShare};
 use log::debug;
 use rand::Rng;
 use rand_derive::Rand;
@@ -53,7 +53,7 @@ pub enum Error {
 pub type Result<T> = ::std::result::Result<T, Error>;
 
 /// A threshold sign message fault
-#[derive(Clone, Debug, Error, PartialEq)]
+#[derive(Clone, Debug, Error, PartialEq, Eq)]
 pub enum FaultKind {
     /// `ThresholdSign` (`Coin`) received a signature share from an unverified sender.
     #[error("`ThresholdSign` (`Coin`) received a signature share from an unverified sender.")]
@@ -67,7 +67,7 @@ pub enum FaultKind {
 }
 
 /// A threshold signing message, containing a signature share.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Rand)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, Rand)]
 pub struct Message(pub SignatureShare);
 
 /// A threshold signing algorithm instance. On input, broadcasts our threshold signature share. Upon
@@ -218,7 +218,7 @@ impl<N: NodeIdT> ThresholdSign<N> {
         };
         match self.netinfo.public_key_share(id) {
             None => false, // Unknown sender.
-            Some(pk_i) => pk_i.verify_g2(&share, *hash),
+            Some(pk_i) => pk_i.verify_g2(share, *hash),
         }
     }
 

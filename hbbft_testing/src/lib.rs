@@ -535,10 +535,10 @@ where
 
         // If the trace setting is not overriden, we use the setting from the environment.
         let trace = self.trace.unwrap_or_else(|| {
-            match env::var("HBBFT_TEST_TRACE").as_ref().map(String::as_str) {
-                Ok("true") | Ok("1") => true,
-                _ => false,
-            }
+            matches!(
+                env::var("HBBFT_TEST_TRACE").as_ref().map(String::as_str),
+                Ok("true") | Ok("1")
+            )
         });
 
         if trace {
@@ -670,7 +670,7 @@ where
     /// Returns `None` if the node ID is not part of the network.
     #[inline]
     #[allow(clippy::needless_pass_by_value)]
-    pub fn get<'a>(&'a self, id: D::NodeId) -> Option<&'a Node<D>> {
+    pub fn get(&self, id: D::NodeId) -> Option<&Node<D>> {
         self.nodes.get(&id)
     }
 
@@ -679,7 +679,7 @@ where
     /// Returns `None` if the node ID is not part of the network.
     #[inline]
     #[allow(clippy::needless_pass_by_value)]
-    pub fn get_mut<'a>(&'a mut self, id: D::NodeId) -> Option<&'a mut Node<D>> {
+    pub fn get_mut(&mut self, id: D::NodeId) -> Option<&mut Node<D>> {
         self.nodes.get_mut(&id)
     }
 
