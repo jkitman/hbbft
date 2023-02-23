@@ -28,4 +28,4 @@ proptest = "1.0.0"
 rand = "0.8.5"
 rand_xorshift = "0.3.0"
 thiserror = "1.0.31"
-threshold_crypto = { git = "https://github.com/elsirion/threshold_crypto", branch = "2022-08-upgrade-pairing" }
+threshold_crypto = { git = "https://github.com/fedimint/threshold_crypto" }

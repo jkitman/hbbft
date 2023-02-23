@@ -36,7 +36,7 @@ rand_derive = "0.5.0"
 reed-solomon-erasure = "5.0.3"
 serde = { version = "1.0.137", features = ["derive", "rc"] }
 thiserror = "1.0.31"
-threshold_crypto = { git = "https://github.com/elsirion/threshold_crypto", branch = "2022-08-upgrade-pairing" }
+threshold_crypto = { git = "https://github.com/fedimint/threshold_crypto" }
 tiny-keccak = { version = "2.0.2", features = ["sha3"] }
 
 [dev-dependencies]
